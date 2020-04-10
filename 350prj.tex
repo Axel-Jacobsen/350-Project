@@ -1,0 +1,142 @@
+\documentclass[titlepage]{article}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {./imgs/} }
+
+\begin{document}
+
+\title{
+    PHYS 350 Final Project \\
+    \large Bobbing in Air
+}
+\author{Axel Jacobsen \\ 21341169}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{The Question}
+
+I thought of this idea for a project while on a run. I was thinking about the forces and energy of an object bobbing in water, and was trying to think of other examples of the same motion in nature. From there, I tried to imagine some object bobbing in air. Then I thought of blimps and hot air balloons! Since they are just buoyant objects in their own (albiet low-density) fluid, I wanted to figure out if blimps would "bob" in the atmosphere as it reaches its max altitude.
+
+\section{The Model}
+
+Lighter-than-air aircraft (LTAA) are remarkably simple. In the simplest cases, one can model a LTAA as a volume, with some point mass in the center. We need some non-zero volume for the buoyant force. More complex models can model some massles volume connected to a mass by a massless rigid body, as shown below:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=100px]{balloon.png}
+    \caption{Balloon Model}
+\end{figure}
+
+This would allow for more dimensions of motion; for example, you could tilt the balloon a little bit and you would get oscillations back and fourth:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=100px]{balloon_angle.png}
+    \caption{Balloon Model, perturbed by some angle}
+\end{figure}
+
+However, we should stay on track (for now). We have to contend with a model for the atmosphere. We need the "buoyant potential" for this probem, and for that, we need the air density. Gasses are nothing if not unruly, with their properties of pressure, temperature, and density being interconnected. This is, of course, assuming that the atmosphere is an ideal gas, which it is not (due to the presence of water vapor). Lucky for me, we have an expression for density over altitude. Wikipedia's page on the Density of Air\cite{density_eqn} gives us
+
+\[
+    \rho=\frac{p_{0} M}{R T_{0}}\left(1-\frac{L z}{T_{0}}\right)^{g M / R L-1}
+\]
+
+where
+
+\[
+     \begin{split}
+        &\rho \rightarrow \text{Air Density} \\
+        &p_0 \rightarrow \text{Air Pressure at Sea Level} \\
+        &M \rightarrow \text{Molar Mass of Air} \\
+        &R \rightarrow \text{Ideal Gas Constant} \\
+        &L \rightarrow \text{Temperature Lapse Rate} \\
+        &T_0 \rightarrow \text{Temperature at Sea Level} \\
+        &g \rightarrow \text{Gravitational Acceleration Near Earth} \\
+    \end{split}
+\]
+
+This equation was derived assuming only that air is an ideal gas. If we make the assumption that air is isothermal (which is not a terrible approximation within the Troposphere \cite{troposphere}, which extends to ~12 km), we can use the further simplification of
+
+\[
+    \rho(z) \approx \rho_{0} e^{-z / H_{n}}
+\]
+
+where $H_n$ is approximately $10.4~km$, and $\rho_0$ is the density of air at sea level.
+
+With $ \rho_0 = 1.225 kg/m^3 $\cite{density_eqn} , we can proceed to the problems!
+
+\section{Problems}
+
+\subsection{Problem 1: What is the altitude over time of a unperturbed blimp?}
+
+Imagine a blimp of volume $V$ and mass $m$, initially stationary, fixed to the ground. If the air has a density of $\rho(z) = \rho_0 e^{-{z / H}} $, what is its motion over time? Assume that it is constrained to only move vertically.
+
+\newpage
+
+\section{Solutions}
+
+\subsection{Solution: Problem 1}
+
+This is an $s = 1$ problem, with $q = z$. We fix the origin of the system to the ground, with $z$ pointing vertically. We need to figure out the ``potential'' for the buoyant force. Remembering that
+\[
+    \textbf{F} = - {\partial U \over \partial r} \hat{r},
+\]
+we can find the potential from the buoyant force. The equation for the buoyant force is
+\[
+    \begin{split}
+        \textbf{F}_b &= - \rho(z) V \textbf{g} \\
+        &= - \rho_{0} e^{-z / H_{n}} V \textbf{g} \\
+    \end{split}
+\]
+so
+\[
+    \begin{split}
+        U_b &= - \int_0^z \textbf{F} \cdot d\textbf{r} \\
+        &= \int_0^z \rho_{0} e^{-r / H_{n}} V \textbf{g} \cdot d\textbf{r} \\
+        &= H_n \rho_0 e^{-z/H_n} V g
+    \end{split}
+\]
+The sign of $U_b$ is positive as the integral of $e^{-x}$ is negative, and $\textbf{g} \cdot d\textbf{r} = -g dr$. We have the gravitational potential $U_g = mgz$. The kinetic energy of the blimp is $T = {m \over 2} \dot{z}^2$. The lagrangian then must be
+\[
+    \begin{split}
+        \mathcal{L} &= T - U \\
+        &= {m \over 2} \dot{z}^2 - H_n \rho_0 e^{-z/H_n} V g - mgz
+    \end{split}
+\]
+Applying the Euler-Lagrange equation,
+\[
+    {d \over dt} \left( m\dot{z} \right) = \rho_0 e^{-z / H_n} V g - mg
+\]
+so our equation of motion is
+\[
+    m\ddot{z} - \rho_0 e^{-z / H_n} V g + mg = 0
+\]
+This is a non-linear, non-homogenous, 2nd order ordinary differential equation. Therefore, we will sove this numerically. We can do this by letting $v = \dot{z}$, and solving the following system of equations. 
+\[
+    \begin{cases}
+        \dot{z} = v \\
+        \dot{v} = \ddot{z} = {\rho_0 \over m} e^{-z / H_n} V g - g
+    \end{cases}
+\]
+
+\newpage
+
+We will have to assign numerical values for the volume and the mass of the ship; we can use the mass and volume of a Hindenburg, which had a volume of $V = 200,000~m^3$ and a mass of $474,000~lbs$, or $215,000~kg$ \cite{zeppelin}. With a little python (which is in the appendix), we have a solution for the blimp's altitude over time:
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=250px]{p1_altitude_over_time.png}
+    \caption{Altitude over time of a blimp}
+\end{figure}
+To my suprise, the solution to the ODE is sinusoidal; The blimp rockets upward to a max altitude of 2778 m
+
+\newpage
+
+\bibliographystyle{plain}
+\bibliography{references.bib}
+\thispagestyle{empty}
+
+\end{document}
