@@ -49,5 +49,6 @@ sol = solve_ivp(
 plt.plot(t, sol.y[0])
 plt.xlabel('time (s)')
 plt.ylabel('altitude (m)')
+plt.ylim(0,3000)
 plt.show()
 
