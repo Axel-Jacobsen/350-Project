@@ -51,4 +51,3 @@ plt.xlabel('time (s)')
 plt.ylabel('altitude (m)')
 plt.ylim(0,3000)
 plt.show()
-
