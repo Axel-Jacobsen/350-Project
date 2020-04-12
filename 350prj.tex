@@ -23,23 +23,10 @@ I thought of this idea for a project while on a run. I was thinking about the fo
 
 \section{The Model}
 
-Lighter-than-air aircraft (LTAA) are remarkably simple. In the simplest cases, one can model a LTAA as a volume, with some point mass in the center. We need some non-zero volume for the buoyant force. More complex models can model some massles volume connected to a mass by a massless rigid body, as shown below:
+Lighter-than-air aircraft (LTAA) are remarkably simple. In the simplest cases, one can model a LTAA as a volume, with some point mass in the center. We need some non-zero volume for the buoyant force, and mass of course for the kinetic energy.
+\vspace{8pt}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=100px]{balloon.png}
-    \caption{Balloon Model}
-\end{figure}
-
-This would allow for more dimensions of motion; for example, you could tilt the balloon a little bit and you would get oscillations back and fourth:
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=100px]{balloon_angle.png}
-    \caption{Balloon Model, perturbed by some angle}
-\end{figure}
-
-However, we should stay on track (for now). We have to contend with a model for the atmosphere. We need the "buoyant potential" for this probem, and for that, we need the air density. Gasses are nothing if not unruly, with their properties of pressure, temperature, and density being interconnected. This is, of course, assuming that the atmosphere is an ideal gas, which it is not (due to the presence of water vapor). Lucky for me, we have an expression for density over altitude. Wikipedia's page on the Density of Air\cite{density_eqn} gives us
+We have to contend with a model for the atmosphere. We need the "buoyant potential" for this probem, and for that, we need the air density. Gasses are nothing if not unruly, with their properties of pressure, temperature, and density being interconnected. This is, of course, assuming that the atmosphere is an ideal gas, which it is not (due to the presence of water vapor). Lucky for me, we have an expression for density over altitude. Wikipedia's page on the Density of Air\cite{density_eqn} gives us
 
 \[
     \rho=\frac{p_{0} M}{R T_{0}}\left(1-\frac{L z}{T_{0}}\right)^{g M / R L-1}
@@ -194,17 +181,19 @@ We can reduce this to a set of coupled 1st order equations, like before:
         \dot{v} = \ddot{z} = {\rho_0 \over m} e^{-z / H_n} V g - g - \frac{\rho_0}{m} v C_D A
     \end{cases}
 \]
-Numerically solving with initial conditions all zero, we get something like this:
+Numerically solving with initial conditions all zero, we get something like \ref{fig:damped}:
 \begin{figure}[h]
     \centering
     \includegraphics[width=250px]{p2_drag_0.png}
     \caption{The altitude of the blimp over time, starting from the ground}
+    \label{fig:damped}
 \end{figure}
-This is much nicer! The effect of air drag is clear, as the motion of the blimp is now damped. Releasing from a higher initial altitude, we get a smaller amplitude of oscillation, as expected.
+This is much nicer! The effect of air drag is clear, as the motion of the blimp is now damped. Releasing from a higher initial altitude, we get a smaller amplitude of oscillation, as expected: see Figure \ref{fig:high}.
 \begin{figure}[h]
     \centering
     \includegraphics[width=250px]{p2_drag_1000.png}
     \caption{The altitude of the blimp over time, starting 1000 $m$ up}
+    \label{fig:high}
 \end{figure}
 In real life, the pilots of the aircraft would reduce the accelleration of the blimp, for a much more reasonable flight.
 
